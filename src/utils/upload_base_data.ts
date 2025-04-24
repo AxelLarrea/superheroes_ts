@@ -1,4 +1,4 @@
-import { supabase } from './db/supabase.js'; 
+import supabase from '../db/supabase-client.ts'; 
 
 const superheroes = [
     {
@@ -28,7 +28,7 @@ const superheroes = [
         ],
         logo: "https://1000marcas.net/wp-content/uploads/2021/07/Marvel-Comics-logo.jpg",
         appearance_year: "1963",
-        equmentto:
+        equipment:
         "Ojo de Agamotto, Orbe de Agamoto, Capa de Levitación, Libro de los Vishanti",
     },
     {
@@ -251,7 +251,7 @@ const superheroes = [
         ],
         logo: "https://1000marcas.net/wp-content/uploads/2021/07/Marvel-Comics-logo.jpg",
         appearance_year: "1966",
-        equmentto:
+        equipment:
         "Casco y armadura artesanal, conversor de energía, nulificador supremo",
     },
     {
@@ -492,7 +492,52 @@ const superheroes = [
     },
 ];
 
+const uploadLinks = (heroeId: number, links: string[]) => {
 
-const upload = async (data) => {
+    links.map (async (link: string) => {
+        try {
+            const data = {
+                superheroe_id: heroeId,
+                image_url: link,
+            }
     
+            const { data: imageData, error } = await supabase
+                .from('superheroe_images')
+                .insert(data)
+                .single()
+
+            if (error) {
+                console.error('Error uploading image:', error)
+            } else {
+                console.log('Image uploaded successfully')
+            }
+        } catch (error) {
+            console.error('Error:', error); 
+        }
+    })
 }
+
+const upload = () => {
+    superheroes.map(async (heroe) => {
+
+        // Remove the urls property from the hero object
+        const { urls, ...heroWhitoutUrl } = heroe
+
+        const { data, error } = await supabase
+            .from('superheroe')
+            .insert(heroWhitoutUrl)
+            .select('id')
+            .single()
+
+        if (error) {
+            console.error('Error uploading hero:', error)
+            console.log(data)
+        } else {
+            console.log('Hero uploaded successfully', data)
+            uploadLinks(data.id, urls)
+        }
+    })
+
+}
+
+upload()

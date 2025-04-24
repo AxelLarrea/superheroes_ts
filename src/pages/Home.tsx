@@ -1,6 +1,7 @@
 import { useState } from "react";
-import Card from "../components/Card";
 import { Character } from "../types";
+
+import Card from "../components/Card";
 
 
 const chars: Character[] = [
@@ -51,15 +52,15 @@ const Home = () => {
                     </button>
 
                     <ul className="hidden bg-primary-header rounded-3xl group-hover:flex group-hover:rounded-s-none group-hover:rounded-e-3xl shadow-md">
-                        <li className="hover:bg-primary-btn px-4 py-2" value="Todos" onClick={() => setSelectedFilter('Todos')}>
+                        <li className="hover:bg-primary-btn-hover px-4 py-2" value="Todos" onClick={() => setSelectedFilter('Todos')}>
                             <span className="text-center">Todos</span>
                         </li>
 
-                        <li className="hover:bg-primary-btn px-4 py-2" value="DC" onClick={() => setSelectedFilter('DC')}>
+                        <li className="hover:bg-primary-btn-hover px-4 py-2" value="DC" onClick={() => setSelectedFilter('DC')}>
                             <span className="text-center">DC</span>
                         </li>
 
-                        <li className="hover:bg-primary-btn px-4 py-2 rounded-e-3xl" value="Marvel" onClick={() => setSelectedFilter('Marvel')}>
+                        <li className="hover:bg-primary-btn-hover px-4 py-2 rounded-e-3xl" value="Marvel" onClick={() => setSelectedFilter('Marvel')}>
                             <span className="text-center">Marvel</span>
                         </li>
                     </ul>

@@ -7,6 +7,8 @@ import './App.css'
 
 function App() {
     
+    console.log(import.meta.env)
+
     return (
         <>
             <Header />
