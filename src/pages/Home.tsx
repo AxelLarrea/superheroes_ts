@@ -1,46 +1,27 @@
-import { useState } from "react";
-import { Character } from "../types";
+import { Suspense, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+import { Hero } from "../types/types";
+import getSuperheroes from "../utils/getSuperheroes";
 
 import Card from "../components/Card";
 
-
-const chars: Character[] = [
-    {
-        id: crypto.randomUUID(),
-        name: 'a',
-        description: 'a',
-        image: 'https://example.com/image1.jpg'
-    },
-    {
-        id: crypto.randomUUID(),
-        name: 'b',
-        description: 'b',
-        image: 'https://example.com/image2.jpg'
-    },
-    {
-        id: crypto.randomUUID(),
-        name: 'c',
-        description: 'c',
-        image: 'https://example.com/image3.jpg'
-    },
-    {
-        id: crypto.randomUUID(),
-        name: 'd',
-        description: 'd',
-        image: 'https://example.com/image4.jpg'
-    }
-]
-
 const Home = () => {
 
-    const [characters, setCharacters] = useState<Character[]>(chars);
     const [selectedFilter, setSelectedFilter] = useState<string>('Todos');
+    
+    const { data: heroes } = useQuery({
+        queryKey: ['superheroes', selectedFilter],
+        queryFn: () => getSuperheroes(selectedFilter)
+    })
 
+    if (heroes) console.log('Heroes:', heroes)
+        
     return (
         <>
             <div className="max-w-[1200px] font-medium text-white text-base flex justify-between items-center h-24 m-auto">
                 <div className="group flex items-center">
-                    <button className="w-28 flex items-center justify-between bg-primary-btn rounded-3xl group-hover:rounded-s-3xl group-hover:rounded-e-none px-4 py-2">
+                    <button className="w-28 flex items-center justify-between bg-primary-btn rounded-3xl group-hover:rounded-s-3xl group-hover:rounded-e-none px-4 py-2" >
                         {selectedFilter}
                         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#FFF">
                             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
@@ -81,18 +62,20 @@ const Home = () => {
                 </div>
             </div>
 
-            <div className="max-w-[1200px] grid grid-cols-4 gap-4 m-auto py-4">
-                {
-                    characters.map((character) => (
-                        <Card 
-                            key={character.id}
-                            name={character.name}
-                            description={character.description}
-                            image={character.image}
-                        />
-                    ))
-                }
-            </div>
+            <Suspense fallback={'Loading...'}>
+                <div className="max-w-[1200px] grid grid-cols-4 gap-4 m-auto py-4">
+                    {
+                        heroes?.map((hero: Hero) => (
+                            <Card 
+                                key={hero.id}
+                                char_name={hero.char_name}
+                                images_urls={hero.images_urls}
+                            />
+                        ))
+                    }
+                </div>
+            </Suspense>
+
         </>
     );
 }

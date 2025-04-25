@@ -9,6 +9,6 @@ Es una aplicación donde se puede:
 
 Anotaciones:
 
-Para la carga inicial de datos se utiliza el script en utils/upload_base_data.ts
-Dado que es un proyecto en TS, se debe usar el comando node --experimental-strip-types upload_base_data.ts
+Para la carga inicial de datos se utiliza el script en utils/upload_base_data.ts.
+Dado que es un proyecto en TS, se debe usar el comando node --experimental-strip-types upload_base_data.ts.
 Cambiar las variables supabaseUrl y supabaseKey con su correspondiente string en el archivo db/supabase-client.ts sin usar el .env.

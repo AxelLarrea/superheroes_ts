@@ -1,12 +1,11 @@
-import { Character } from "../types";
+import { Hero } from "../types/types";
 
-const Card = ({ name, description, image } : Omit<Character, 'id'>) => {
+const Card = ({ char_name, images_urls } : Pick<Hero, 'char_name' | 'images_urls'>) => {
     return (
         <div className="bg-white rounded-lg shadow-lg p-4">
-            <img src={image} alt={name} className="w-full h-48 object-cover rounded-t-lg" />
-            <div className="p-4">
-                <h2 className="text-xl font-bold">{name}</h2>
-                <p className="text-gray-700">{description}</p>
+            <img src={images_urls[0]} alt={char_name} className="w-full h-48 object-cover rounded-t-lg" />
+            <div className="p-4 text-center">
+                <h2 className="text-xl font-bold">{char_name}</h2>
             </div>
         </div>
     );
