@@ -1,15 +1,13 @@
+import { useCharStore } from "../utils/store";
 
 const Header = () => {
 
-    // const filterCharacters = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const inputValue = e.target.value.toLowerCase();
-    //     const filteredCharacters = characters.filter(character => 
-    //         character.name.toLowerCase().includes(inputValue)
-    //     );
-
-    //     // Usar Zustand para actualizar el estado global
-    //     setFilteredCharacters(filteredCharacters);
-    // }
+    const { setSearchCharacter } = useCharStore()
+   
+    const filterCharacters = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const inputValue = e.target.value.toLowerCase();
+        setSearchCharacter(inputValue);
+    }
 
     return (
         <header className="bg-primary-header text-white p-4">
@@ -20,7 +18,7 @@ const Header = () => {
                     type="text"
                     placeholder="Buscar personaje"
                     name="search"
-                    // onChange={filterCharacters}
+                    onChange={filterCharacters}
                 />
             </div>
         </header>

@@ -1,6 +1,5 @@
 import supabase from "../db/supabase-client";
 
-
 const getSuperheroes = async (filter: string) => {
     try {
         const { data, error } = await supabase

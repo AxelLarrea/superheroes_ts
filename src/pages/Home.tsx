@@ -1,7 +1,9 @@
 import { Suspense, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 
 import { Hero } from "../types/types";
+import { useCharStore } from "../utils/store";
 import getSuperheroes from "../utils/getSuperheroes";
 
 import Card from "../components/Card";
@@ -9,11 +11,15 @@ import Card from "../components/Card";
 const Home = () => {
 
     const [selectedFilter, setSelectedFilter] = useState<string>('Todos');
+    const { searchCharacter } = useCharStore()
+    const [location, navigate] = useLocation();
     
     const { data: heroes } = useQuery({
         queryKey: ['superheroes', selectedFilter],
         queryFn: () => getSuperheroes(selectedFilter)
-    })
+    }) 
+
+    const searchHero = heroes?.filter((hero: Hero) => hero.char_name.toLowerCase().includes(searchCharacter))
 
     if (heroes) console.log('Heroes:', heroes)
         
@@ -48,7 +54,7 @@ const Home = () => {
                 </div>
 
 
-                <div className="bg-primary-btn rounded-3xl shadow-md px-4 py-2">
+                <div className="bg-primary-btn rounded-3xl shadow-md px-4 py-2" onClick={() => navigate('/add-one')}>
                     <button className="flex items-center gap-2" onClick={() => window.location.href = '/add-one'}>
                         Agregar un personaje 
                         <svg className="w-5 h-5" fill="#FFF" width="64px" height="64px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="#FFF">
@@ -65,7 +71,7 @@ const Home = () => {
             <Suspense fallback={'Loading...'}>
                 <div className="max-w-[1200px] grid grid-cols-4 gap-4 m-auto py-4">
                     {
-                        heroes?.map((hero: Hero) => (
+                        searchHero?.map((hero: Hero) => (
                             <Card 
                                 key={hero.id}
                                 char_name={hero.char_name}

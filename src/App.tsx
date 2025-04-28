@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import Home from './pages/Home'
 import Header from './components/Header'
+import Character from './pages/Character'
 
 import './App.css'
 
@@ -24,6 +25,7 @@ function App() {
                 <Header />
                 
                 <Route path="/" component={Home} />
+                <Route path="/char/:id" component={Character} />
                 <Route path="/add-one" component={() => <div>Agregar personaje</div>} />
             </QueryClientProvider>
         </>
