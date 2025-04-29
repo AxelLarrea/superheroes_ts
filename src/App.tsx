@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Home from './pages/Home'
 import Header from './components/Header'
 import Character from './pages/Character'
+import HeroForm from './components/HeroForm'
 
 import './App.css'
 
@@ -26,7 +27,7 @@ function App() {
                 
                 <Route path="/" component={Home} />
                 <Route path="/char/:id" component={Character} />
-                <Route path="/add-one" component={() => <div>Agregar personaje</div>} />
+                <Route path="/add-one" component={HeroForm} />
             </QueryClientProvider>
         </>
     )
