@@ -6,8 +6,8 @@ import { Hero } from "../types/types";
 
 const Card = ({ char_name, images_urls } : Pick<Hero, 'char_name' | 'images_urls'>) => {
 
-    const [location, navigate] = useLocation()
-
+    const [location, navigate] = useLocation()  
+    
     return (
         <div className="bg-white rounded-lg shadow-lg p-4" onClick={() => navigate(`/char/${char_name}`)}>
             <img src={images_urls[0]} alt={char_name} className="w-full h-48 object-cover rounded-t-lg" />
