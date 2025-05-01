@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-import supabase from "../db/supabase-client";
 import { Hero } from "../types/types";
+import supabase from "../db/supabase-client";
+import uploadImage from "../utils/uploadImage";
 
 interface ImageFile {
     file: File
@@ -13,48 +14,66 @@ const HeroForm = () => {
     const [images, setImages] = useState<ImageFile[]>([]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+        try {
+            event.preventDefault();
         
-        const { elements } = event.currentTarget;
+            const { elements } = event.currentTarget;
 
-        // Validate inputs
-        const data = {
-            char_name: (elements.namedItem('charName') as HTMLInputElement).value,
-            real_name: (elements.namedItem('realName') as HTMLInputElement).value,
-            comic_universe: (elements.namedItem('comic') as HTMLSelectElement).value,
-            appearance_year: (elements.namedItem('year') as HTMLInputElement).value,
-            equipment: (elements.namedItem('equipment') as HTMLInputElement).value,
-            bio: (elements.namedItem('bio') as HTMLTextAreaElement).value
-        };
+            // Validar inputs
+            const data = {
+                char_name: (elements.namedItem('charName') as HTMLInputElement).value,
+                real_name: (elements.namedItem('realName') as HTMLInputElement).value,
+                comic_universe: (elements.namedItem('comic') as HTMLSelectElement).value,
+                appearance_year: (elements.namedItem('year') as HTMLInputElement).value,
+                equipment: (elements.namedItem('equipment') as HTMLInputElement).value,
+                bio: (elements.namedItem('bio') as HTMLTextAreaElement).value
+            };
 
-        const isDc = data.comic_universe === 'DC';
-        const logo = isDc ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/DC_Comics_logo.svg/1024px-DC_Comics_logo.svg.png' : 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Marvel_Logo.svg';
+            const isDc = data.comic_universe === 'DC';
+            const logo = isDc ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/DC_Comics_logo.svg/1024px-DC_Comics_logo.svg.png' : 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Marvel_Logo.svg';
 
-        const formData: Omit<Hero, 'id' | 'images_urls'> = {
-            ...data,
-            logo
+            const formData: Omit<Hero, 'id' | 'images_urls'> = {
+                ...data,
+                logo
+            }
+
+            // Insert superheroe
+            const { error: insertError } = await supabase
+                .from('superheroe')
+                .insert(formData);
+
+            if (insertError) return console.log('Error inserting data:', insertError)
+            
+            // Query superheroe id
+            const { data: heroQuery, error: queryError } = await supabase
+                .from('superheroe')
+                .select('id')
+                .eq('char_name', data.char_name)
+                .single()
+
+            if (queryError) return console.log('Error fetching superhero:', queryError)
+            
+            // Upload imagenes
+            const imagesFiles = images.map(({ file }: ImageFile) => file)
+
+            uploadImage({
+                charId: heroQuery?.id, 
+                files: imagesFiles
+            })
+
+        } catch (error) {
+            return console.log('Error:', error);
         }
-
-        console.log('Form data:', formData)
-
-        const imagesData = (elements.namedItem('images') as HTMLInputElement).files;
-        console.log('Images data:', imagesData);
-
-        // const { data: heroData, error } = await supabase
-        //     .from('heroes')
-        //     .insert([data]);
-
-        // console.log('data: ', data)
-
-        // if (error) {
-        //     console.error('Error inserting data:', error);
-        // } else {
-        //     console.log('Data inserted successfully!');
-        // }
-    };
+        
+    }
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
+
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+
+        fileInput.files = files;
+        
         if (files) {
             const newImages: ImageFile[] = Array.from(files).map((file: File) => ({
                 file,
@@ -79,14 +98,27 @@ const HeroForm = () => {
         if (newImages.length > 0) {
             const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
             if (fileInput) {
-                fileInput.files = imagesFiles;
+                const newFiles = [...imagesFiles!, ...fileInput.files!]
+                const dataTransfer = new DataTransfer();
+                Array.from(newFiles).forEach(file => dataTransfer.items.add(file));
+                fileInput.files = dataTransfer.files;
             }
         }
 
         setImages(prev => [...prev, ...newImages])
     }
 
-    const handleDeleteImage = (index: number) => {
+    const handleDeleteImage = (index: number, name: string) => {
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+
+        const dataTransfer = new DataTransfer();
+        Array.from(fileInput.files!).forEach(file => {
+            if (file.name !== name) {
+                dataTransfer.items.add(file);
+            }
+        });
+        fileInput.files = dataTransfer.files;
+
         setImages(prev => prev.filter((_, i) => i !== index));
     }
 
@@ -118,9 +150,9 @@ const HeroForm = () => {
                 <div className="flex gap-4 flex-wrap justify-center max-w-md">
                     {
                         images.map((image, index) => (
-                            <div key={index} className="relative flex flex-col items-center justify-center gap-2">
-                                <img src={image.previewURL} alt="Preview" className="w-20 h-20 object-cover rounded-md" />
-                                <button className="absolute top-1 right-1 h-4 w-4 flex items-center justify-center font-black bg-white rounded-full pb-1" onClick={() => handleDeleteImage(index)}>x</button>
+                            <div key={index} className="group relative flex flex-col items-center justify-center gap-2">
+                                <img src={image.previewURL} alt="Preview" className="w-20 h-20 object-cover rounded-md group-hover:opacity-90" />
+                                <button className="hidden absolute top-1 right-1 h-4 w-4 group-hover:flex items-center justify-center font-black bg-white rounded-full pb-1" onClick={() => handleDeleteImage(index, image.file.name)}>x</button>
                             </div>
                         ))
                     }
