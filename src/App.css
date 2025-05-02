@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-
     /* Fonts */
     --font-inter-sans: 'Inter', sans-serif;
 
@@ -17,9 +16,8 @@
     --color-primary-btn: #E76F51;
     --color-primary-btn-hover: #064789;
 
-    /* --color-primary-header: #064789;
-    --color-primary-cards: #427AA1;
-    --color-primary-btn: #EBF2FA; */
+    --color-primary-dc: #0476F2;
+    --color-primary-marvel: #ED1D24;
 }
 
 @layer base {

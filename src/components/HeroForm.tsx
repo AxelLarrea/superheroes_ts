@@ -64,7 +64,6 @@ const HeroForm = () => {
         } catch (error) {
             return console.log('Error:', error);
         }
-        
     }
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,6 +116,7 @@ const HeroForm = () => {
                 dataTransfer.items.add(file);
             }
         });
+
         fileInput.files = dataTransfer.files;
 
         setImages(prev => prev.filter((_, i) => i !== index));
@@ -157,7 +157,7 @@ const HeroForm = () => {
                         ))
                     }
                 </div>
-                <button type="submit" className="bg-primary-btn text-white p-2 rounded-md">Agregar personaje</button>
+                <button type="submit" className="bg-gradient-to-r from-orange-500 to-red-500 text-white cursor-pointer rounded-md p-2">Agregar personaje</button>
             </form>
         </div>
     );

@@ -30,7 +30,7 @@ const Header = () => {
                         <path d="m21 21-4.3-4.3"></path>
                     </svg>
                     <input
-                        className="h-10 text-sm text-white bg-white/10 border border-white/20 outline-0 rounded-md px-4 pl-8"
+                        className="h-10 text-sm text-white bg-white/10 border border-white/20 outline-0 rounded-md focus:border-yellow-500 focus:border-2 px-4 pl-8"
                         type="search"
                         placeholder="Buscar personaje"
                         name="search"
