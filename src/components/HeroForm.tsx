@@ -30,7 +30,9 @@ const HeroForm = () => {
             };
 
             const isDc = data.comic_universe === 'DC';
-            const logo = isDc ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/DC_Comics_logo.svg/1024px-DC_Comics_logo.svg.png' : 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Marvel_Logo.svg';
+            const logo = isDc ? 
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/DC_Comics_logo.svg/1024px-DC_Comics_logo.svg.png' :
+                'https://upload.wikimedia.org/wikipedia/commons/e/e0/Marvel_Logo.svg';
 
             const formData: Omit<Hero, 'id' | 'images_urls'> = {
                 ...data,

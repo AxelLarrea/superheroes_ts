@@ -5,19 +5,16 @@
     --font-inter-sans: 'Inter', sans-serif;
 
     /* Colors */
-    --color-primary-charcoal: #264653;
-    --color-primary-persian-green: #2A9D8F;
-    --color-primary-saffron: #E9C46A;
-    --color-primary-sandy-brown: #F4A261;
-    --color-primary-burnt-sienna: #E76F51;
-
     --color-primary-header: #060776;
-    --color-primary-cards: #0077b6;
-    --color-primary-btn: #E76F51;
-    --color-primary-btn-hover: #064789;
 
     --color-primary-dc: #0476F2;
     --color-primary-marvel: #ED1D24;
+
+    --color-btn: #3949AB;
+    --color-btn-hover: #3A4487;
+
+    --color-btn-filter: #F0F1FA;
+    --color-btn-filter-hover: #DFE1F5;
 }
 
 @layer base {
