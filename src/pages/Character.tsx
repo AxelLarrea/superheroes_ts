@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 
 import getSuperhero from "../utils/getSuperhero";
 
 const Character = () => {
-    const [isExpanded, setIsExpanded] = useState(false);
     const { id } = useParams();
 
     const { data } = useQuery({
