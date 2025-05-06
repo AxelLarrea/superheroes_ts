@@ -125,8 +125,8 @@ const HeroForm = () => {
     }
 
     return (
-        <div className="">
-            <h1 className="text-2xl font-semibold text-center">Agregar personaje</h1>
+        <div className="max-w-[600px] border border-gray-300  rounded-lg p-8 m-auto my-8">
+            <h1 className="text-3xl font-bold text-slate-800 font-sans text-center">Agregar personaje</h1>
             <form className="flex flex-col items-center justify-center gap-4 mt-8" onSubmit={handleSubmit}>
                 <input type="text" name="charName" placeholder="Nombre del personaje" required className="border border-gray-300 p-2 rounded-md w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 <input type="text" name="realName" placeholder="Nombre real" required className="border border-gray-300 p-2 rounded-md w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
@@ -138,28 +138,47 @@ const HeroForm = () => {
                 <input type="text" name="year" placeholder="Año de aparición" required className="border border-gray-300 p-2 rounded-md w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 <input type="text" name="equipment" placeholder="Equipamiento" required className="border border-gray-300 p-2 rounded-md w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 <textarea name="bio" placeholder="Biografía" className="border border-gray-300 p-2 rounded-md w-full max-w-md h-32 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                <input 
-                    type="file" 
-                    name="images" 
-                    id="Images" 
+                
+                {/* Mejorar */}
+                {/* <div className="relative w-full max-w-md h-32">
+                    <input
+                        type="file"
+                        name="images"
+                        id="Images"
+                        multiple
+                        required
+                        className="max-w-md w-full h-full opacity-0 text-gray-500 text-sm border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:rounded-full file:border-0 file:bg-primary-header file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-primary-header/80"
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={handleDrop}
+                        onChange={handleImageChange}
+                    />
+                    <label htmlFor="Images" className="absolute top-0 max-w-md w-full h-full cursor-pointer text-white text-lg border border-gray-300 p-2 rounded-md flex items-center justify-center gap-2 hover:bg-gray-100 transition duration-200">
+                        <button className="bg-primary-header/70 py-2 px-4 rounded-full">Subir imagenes</button>
+                    </label>
+                </div> */}
+
+                <input
+                    type="file"
+                    name="images"
+                    id="Images"
                     multiple
                     required
-                    className="text-gray-500 text-sm border border-gray-300 p-2 rounded-md w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:rounded-full file:border-0 file:bg-primary-header file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-primary-header/80"
+                    className="max-w-md w-full h-full text-gray-500 text-sm border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:rounded-full file:border-0 file:bg-primary-header file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-primary-header/80"
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={handleDrop}
                     onChange={handleImageChange}
                 />
-                <div className="flex gap-4 flex-wrap justify-center max-w-md">
+                <div className="max-w-md flex gap-4 flex-wrap justify-center">
                     {
                         images.map((image, index) => (
                             <div key={index} className="group relative flex flex-col items-center justify-center gap-2">
                                 <img src={image.previewURL} alt="Preview" className="w-20 h-20 object-cover rounded-md group-hover:opacity-90" />
-                                <button className="hidden absolute top-1 right-1 h-4 w-4 group-hover:flex items-center justify-center font-black bg-white rounded-full pb-1" onClick={() => handleDeleteImage(index, image.file.name)}>x</button>
+                                <button className="hidden absolute top-1 right-1 h-5 w-5 group-hover:flex items-center justify-center font-medium border border-gray-300 bg-white rounded-md pb-1" onClick={() => handleDeleteImage(index, image.file.name)}>x</button>
                             </div>
                         ))
                     }
                 </div>
-                <button type="submit" className="bg-gradient-to-r from-orange-500 to-red-500 text-white cursor-pointer rounded-md p-2">Agregar personaje</button>
+                <button type="submit" className="bg-btn hover:bg-btn-hover text-white cursor-pointer rounded-md p-2">Agregar personaje</button>
             </form>
         </div>
     );
