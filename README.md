@@ -7,7 +7,7 @@ Es una aplicación donde se puede:
 - Buscar personajes mediante la barra de búsqueda.
 - Agregar personajes nuevos.
 
-[!NOTE]
+Anotaciones:
 
 Para la carga inicial de datos se utiliza el script en utils/upload_base_data.ts.
 Dado que es un proyecto en TS, se debe usar el comando node --experimental-strip-types upload_base_data.ts.
