@@ -5,7 +5,7 @@ import BtnFilter from "./BtnFilter";
 
 const Header = () => {
 
-    const { setSearchCharacter, selectedFilter } = useCharStore();
+    const { setSearchCharacter } = useCharStore();
     const [location] = useLocation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     
