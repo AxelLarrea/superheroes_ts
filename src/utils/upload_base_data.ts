@@ -501,7 +501,7 @@ const uploadLinks = (heroeId: number, links: string[]) => {
                 image_url: link,
             }
     
-            const { data: imageData, error } = await supabase
+            const { error } = await supabase
                 .from('superheroe_images')
                 .insert(data)
                 .single()
