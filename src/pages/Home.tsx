@@ -11,7 +11,7 @@ import BtnFilter from "../components/BtnFilter";
 const Home = () => {
 
     const { searchCharacter, selectedFilter } = useCharStore()
-    const [location, navigate] = useLocation();
+    const [,navigate] = useLocation();
 
     const { data: heroes } = useQuery({
         queryKey: ['superheroes', selectedFilter],
@@ -20,12 +20,12 @@ const Home = () => {
 
     const searchHero = heroes?.filter((hero: Hero) => hero.char_name.toLowerCase().includes(searchCharacter))
     const cantidadChar = searchHero?.length
+    
 
     return (
         <>
-            <div className="max-w-[1200px] font-medium text-base flex justify-between items-center h-24 m-auto">
-                
-                <BtnFilter cantidadChar={cantidadChar} />
+            <div className="hidden max-w-[1200px] h-24 font-medium text-base sm:flex justify-between items-center mx-8 mt-4 xl:mx-auto">
+                <BtnFilter cantidadChar={cantidadChar} isMobile={false} />
 
                 <div className="bg-btn hover:bg-btn-hover rounded-md shadow-md cursor-pointer px-4 py-2" onClick={() => navigate('/add-one')}>
                     <button className="text-white flex items-center gap-2 pointer-events-none" onClick={() => window.location.href = '/add-one'}>
@@ -41,7 +41,7 @@ const Home = () => {
                 </div>
             </div>
 
-            <div className="max-w-[1200px] grid grid-cols-4 gap-4 m-auto py-4">
+            <div className="max-w-[1200px] grid grid-cols-1 gap-6 py-4 mx-8 xl:mx-auto xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {
                     searchHero?.map((hero: Hero) => (
                         <Card 

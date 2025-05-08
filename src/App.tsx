@@ -2,9 +2,9 @@ import { Route } from 'wouter'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import Home from './pages/Home'
-import Header from './components/Header'
 import Character from './pages/Character'
-import HeroForm from './components/HeroForm'
+import HeroForm from './pages/HeroForm'
+import Header from './components/Header'
 
 import './App.css'
 
