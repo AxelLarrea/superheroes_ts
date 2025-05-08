@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useCharStore } from "../utils/store";
 
 interface Cantidad {
@@ -6,18 +6,20 @@ interface Cantidad {
     isMobile: boolean
 }
 
-const BtnFilter = ( { cantidadChar, isMobile } : Cantidad ) => {
+const BtnFilter = ({ cantidadChar, isMobile }: Cantidad ) => {
 
     const { selectedFilter, setSelectedFilter } = useCharStore()
     const [isClicked, setIsClicked] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
+    // Clases para el menú desplegable
     const desktopClass = isClicked ? 
-        'max-w-[400px] opacity-100 rounded-s-none rounded-e-md pl-[100%]' :
-        'opacity-0 h-0'
+        'max-w-[400px] opacity-100 rounded-s-none rounded-e-md pl-[100%] visible' :
+        'opacity-0 w-auto invisible'
 
     const mobileClass = isClicked ? 
-        'w-full opacity-100 flex-col top-0 pt-[20%]' :
-        'opacity-0 h-0'
+        'w-full opacity-100 flex-col top-0 pt-[20%] visible' :
+        'w-full opacity-0 flex-col top-0 h-auto invisible'
 
     const btnClassDesktop = isClicked ? 'rounded-s-md rounded-e-none' : '' // Para botón desktop
     const btnClassMobile = isClicked ? 'rounded-t-md rounded-b-none' : '' // Para botón mobile
@@ -28,8 +30,22 @@ const BtnFilter = ( { cantidadChar, isMobile } : Cantidad ) => {
         setSelectedFilter(filter);
     }
 
+    // Cerrar el menú al hacer clic fuera
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsClicked(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div className="group relative flex items-center">
+        <div className="group relative flex items-center" ref={dropdownRef}>
             <button 
                 className={`${btnClass} ${isMobile ? 'w-full' : 'w-40'} flex items-center justify-between z-10 cursor-pointer text-[#4A55A7] border border-[#DFE1F5] bg-btn-filter hover:bg-btn-filter-hover hover:border-[#4A55A7] transition-all duration-300 rounded-md px-2 py-2`}
                 onClick={() => setIsClicked(!isClicked)}
@@ -43,7 +59,7 @@ const BtnFilter = ( { cantidadChar, isMobile } : Cantidad ) => {
                 </svg>
                 {selectedFilter}
                 { cantidadChar !== undefined && <span className="bg-[#DFE1F5] text-sm rounded-full px-2">{cantidadChar}</span>}
-                <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={`${isClicked ? 'rotate-0' : '-rotate-90'} transition-transform duration-600 ease-in-out`}>
+                <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={`${isClicked ? 'rotate-0' : '-rotate-90'} transition-transform duration-300 ease-in-out`}>
                     <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                     <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                     <g id="SVGRepo_iconCarrier"> 
@@ -52,39 +68,34 @@ const BtnFilter = ( { cantidadChar, isMobile } : Cantidad ) => {
                 </svg>
             </button>
 
-            {/* Arreglar transición cuando vuelve el menú dropdown */}
-            { 
-                isMobile ? 
-                (
-                    <div className={`${mobileClass} absolute left-0 z-0 overflow-hidden flex text-[#4A55A7] bg-btn-filter border border-[#DFE1F5] border-l-0 rounded-md transition-all duration-300 p-0`}>
-                        <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2" value="Todos" onClick={() => handleClick('Todos')}>
-                            <span className="text-center">Todos</span>
-                        </button>
-        
-                        <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2" value="DC" onClick={() => handleClick('DC')}>
-                            <span className="text-center">DC</span>
-                        </button>
-        
-                        <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2 rounded-e-md" value="Marvel" onClick={() => handleClick('Marvel')}>
-                            <span className="text-center">Marvel</span>
-                        </button>
-                    </div>  
-                )
-                :
-                (
-                    <div className={`${desktopClass} absolute left-0 z-0 overflow-hidden flex text-[#4A55A7] bg-btn-filter border border-[#DFE1F5] border-l-0 rounded-md transition-all duration-300`}>
-                        <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2" value="Todos" onClick={() => handleClick('Todos')}>
-                            <span className="text-center">Todos</span>
-                        </button>
-        
-                        <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2" value="DC" onClick={() => handleClick('DC')}>
-                            <span className="text-center">DC</span>
-                        </button>
-        
-                        <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2 rounded-e-md" value="Marvel" onClick={() => handleClick('Marvel')}>
-                            <span className="text-center">Marvel</span>
-                        </button>
-                    </div>
+            {isMobile ? (
+                <div className={`${mobileClass} absolute left-0 z-0 overflow-hidden flex text-[#4A55A7] bg-btn-filter border border-[#DFE1F5] border-l-0 rounded-md transition-all duration-300 p-0`}>
+                    <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2" value="Todos" onClick={() => handleClick('Todos')}>
+                        <span className="text-center">Todos</span>
+                    </button>
+    
+                    <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2" value="DC" onClick={() => handleClick('DC')}>
+                        <span className="text-center">DC</span>
+                    </button>
+    
+                    <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2 rounded-e-md" value="Marvel" onClick={() => handleClick('Marvel')}>
+                        <span className="text-center">Marvel</span>
+                    </button>
+                </div>  
+                ) : (
+                <div className={`${desktopClass} absolute left-0 z-0 overflow-hidden flex text-[#4A55A7] bg-btn-filter border border-[#DFE1F5] border-l-0 rounded-md transition-all duration-300`}>
+                    <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2" value="Todos" onClick={() => handleClick('Todos')}>
+                        <span className="text-center">Todos</span>
+                    </button>
+    
+                    <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2" value="DC" onClick={() => handleClick('DC')}>
+                        <span className="text-center">DC</span>
+                    </button>
+    
+                    <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2 rounded-e-md" value="Marvel" onClick={() => handleClick('Marvel')}>
+                        <span className="text-center">Marvel</span>
+                    </button>
+                </div>
                 )
             }
         </div>
