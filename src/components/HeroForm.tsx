@@ -25,8 +25,7 @@ const HeroForm = ({ handleSubmit, handleImageChange, handleDrop, handleDeleteIma
             <div className="relative w-full max-w-sm">
                 <label htmlFor="Comic" className="block text-sm font-medium text-gray-700 mb-1">Universo</label>
                 <div className="relative group">
-                    <select name="comic" id="Comic" defaultValue="Comic" required className="appearance-none border border-gray-300 p-2 rounded-md w-full outline-0 focus:outline-none focus:border-2 focus:border-blue-500 pr-8">
-                        <option value="Comic" disabled>Comic</option>
+                    <select name="comic" id="Comic" defaultValue="Marvel" className="appearance-none border border-gray-300 p-2 rounded-md w-full outline-0 focus:outline-none focus:border-2 focus:border-blue-500 pr-8">
                         <option value="Marvel">Marvel</option>
                         <option value="DC">DC</option>
                     </select>
