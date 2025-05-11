@@ -11,7 +11,7 @@ const Card = ({ char_name, images_urls, comic_universe } : Pick<Hero, 'char_name
         'bg-blue-100 text-blue-700 border-blue-200'
     
     return (
-        <div className="group bg-white rounded-lg shadow-md p-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-gradient-to-t from-black/5 via-transparent to-transparent" onClick={() => navigate(`/char/${char_name}`)}>
+        <div className="group bg-white rounded-lg shadow-md p-4 transition-all duration-300 hover:cursor-pointer hover:shadow-lg hover:-translate-y-1 hover:bg-gradient-to-t from-black/5 via-transparent to-transparent" onClick={() => navigate(`/char/${char_name}`)}>
             <div className="flex mb-4">
                 <span className={`${comic_class} w-20 text-center border-1 rounded-xl`}>{comic_universe}</span>
             </div>
