@@ -68,7 +68,7 @@ const HeroForm = ({ handleSubmit, handleImageChange, handleDrop, handleDeleteIma
             </div>
 
             {images.length > 0 && (
-                <div className="max-w-sm flex gap-4 flex-wrap justify-center border border-gray-300 p-2 rounded-md w-full h-24">
+                <div className="max-w-sm w-full h-24 flex gap-4 flex-wrap justify-center border border-gray-300 rounded-md p-2">
                     {images.map((image, index) => (
                         <div key={index} className="group relative flex flex-col items-center justify-center gap-2">
                             <img src={image.previewURL} alt="Preview" className="w-20 h-20 object-cover rounded-md group-hover:opacity-90" />

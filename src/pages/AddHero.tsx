@@ -1,12 +1,14 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Hero } from "../types/types";
-import { Id, Slide, toast, ToastContainer } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
 
 import supabase from "../db/supabase-client";
 import uploadImage from "../utils/uploadImage";
+import { getErrorMessage } from "../utils/errorUtil";
+import useToast from "../hooks/useToast";
 
 import HeroForm from "../components/HeroForm";
-import Notification from "../components/Notification";
+import { checkDuplicates, checkFilesType } from "../utils/checkFilesUtils";
 
 export interface ImageFile {
     file: File
@@ -16,42 +18,12 @@ export interface ImageFile {
 const AddHero = () => {
     const [images, setImages] = useState<ImageFile[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const toastId = useRef<Id>(0);
-
-    const notify = () => toastId.current = toast(Notification, { 
-        data: {
-            content: 'Agregando personaje...'
-        },
-        autoClose: false,
-        toastId: toastId.current
-    });
-
-    const updateSuccess = () => toast.update(toastId.current, { 
-        render: Notification,
-        data: {
-            content: "Personaje agregado correctamente",
-            isSuccess: true
-        },
-        type: "success",
-        autoClose: 4000 
-    });
-
-
-    const updateError = () => toast.update(toastId.current, { 
-        render: Notification,
-        data: {
-            content: "Error al agregar el personaje",
-            isSuccess: false
-        },
-        type: "error",
-        autoClose: 4000 
-    });
+    const { notify, updateSuccess, updateError } = useToast();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        setIsLoading(true)
         try {
             event.preventDefault()
-            
-            setIsLoading(true)
             notify()
             // throw new Error("Error inesperado"); // <--- para probar el error
             
@@ -77,15 +49,23 @@ const AddHero = () => {
                 logo
             }
 
+            // Validate existing hero
+            const { data: existingHero, error: existingHeroError } = await supabase
+                .from('superheroe')
+                .select('*')
+                .eq('char_name', data.char_name)
+                
+            if (existingHero && existingHero?.length > 0 ) throw new Error("El personaje ya existe")
+            
+            if (existingHeroError) throw new Error("Error al validar si el personaje existe")
+
             // Insert superheroe
             const { error: insertError } = await supabase
                 .from('superheroe')
                 .insert(formData)
 
-            if (insertError) {
-                setIsLoading(false)
-                return console.log(insertError);
-            }
+            if (insertError) throw new Error("Error al insertar el personaje")
+            
             
             // Query superheroe id
             const { data: heroQuery, error: queryError } = await supabase
@@ -94,10 +74,7 @@ const AddHero = () => {
                 .eq('char_name', data.char_name)
                 .single()
 
-            if (queryError) {
-                setIsLoading(false)
-                return console.log(queryError);
-            }
+            if (queryError) throw new Error("Error al obtener el id del personaje")
             
             // Upload imágenes
             const imagesFiles = images.map(({ file }: ImageFile) => file)
@@ -115,21 +92,30 @@ const AddHero = () => {
             }
 
         } catch (error) {
-            updateError()
-            return console.log(error)
+            const errorMessage = getErrorMessage(error);
+            updateError(errorMessage)
         } finally {
             setIsLoading(false);
         }
     }
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (images.length === 3) return
+
         const files = event.target.files
         const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+        const newFiles = Array.from(files!)
+        const validFiles = checkFilesType(newFiles);
+        const uniqueFiles = checkDuplicates(validFiles, images);
 
-        fileInput.files = files
+        if (uniqueFiles.length === 0) return
+
+        const dataTransfer = new DataTransfer();
+        uniqueFiles.forEach(file => dataTransfer.items.add(file));
+        fileInput.files = dataTransfer.files;
         
         if (files) {
-            const newImages: ImageFile[] = Array.from(files).map((file: File) => ({
+            const newImages: ImageFile[] = uniqueFiles.map((file: File) => ({
                 file,
                 previewURL: URL.createObjectURL(file),
             }));
@@ -139,12 +125,18 @@ const AddHero = () => {
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
+
+        if (images.length === 3) return
+
         const imagesFiles = event.dataTransfer.files;
         const droppedImages = Array.from(imagesFiles);
 
-        if (droppedImages.length === 0) return;
+        const validFiles = checkFilesType(droppedImages);
+        const uniqueFiles = checkDuplicates(validFiles, images);
 
-        const newImages: ImageFile[] = droppedImages.map((file: File) => ({
+        if (uniqueFiles.length === 0) return
+
+        const newImages: ImageFile[] = uniqueFiles.map((file: File) => ({
             file,
             previewURL: URL.createObjectURL(file)
         }));
@@ -152,7 +144,7 @@ const AddHero = () => {
         if (newImages.length > 0) {
             const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
             if (fileInput) {
-                const newFiles = [...imagesFiles!, ...fileInput.files!]
+                const newFiles = [...uniqueFiles!, ...fileInput.files!]
                 const dataTransfer = new DataTransfer();
                 Array.from(newFiles).forEach(file => dataTransfer.items.add(file));
                 fileInput.files = dataTransfer.files;
