@@ -3,10 +3,12 @@ import { useLocation } from "wouter";
 
 import { Hero } from "../types/types";
 import { useCharStore } from "../utils/store";
-import getSuperheroes from "../utils/getSuperheroes";
+import getSuperheroes from "../utils/db/getSuperheroes";
 
 import Card from "../components/Card";
 import BtnFilter from "../components/BtnFilter";
+
+type CardHero = Pick<Hero, 'id' | 'char_name' | 'images_urls' | 'comic_universe'>
 
 const Home = () => {
 
@@ -18,7 +20,7 @@ const Home = () => {
         queryFn: () => getSuperheroes(selectedFilter)
     })
 
-    const searchHero = heroes?.filter((hero: Hero) => hero.char_name.toLowerCase().includes(searchCharacter))
+    const searchHero = heroes?.filter((hero: CardHero) => hero.char_name.toLowerCase().includes(searchCharacter))
     const cantidadChar = searchHero?.length
     
 
@@ -43,7 +45,7 @@ const Home = () => {
 
             <div className="max-w-[1200px] grid grid-cols-1 gap-6 py-4 mx-8 xl:mx-auto xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {
-                    searchHero?.map((hero: Hero) => (
+                    searchHero?.map((hero: CardHero) => (
                         <Card 
                             key={hero.id}
                             char_name={hero.char_name}
