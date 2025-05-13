@@ -3,7 +3,7 @@ import { Hero } from "../types/types";
 import { Slide, ToastContainer } from "react-toastify";
 
 import supabase from "../db/supabase-client";
-import uploadImage from "../utils/uploadImage";
+import uploadImage from "../utils/db/uploadImage";
 import { getErrorMessage } from "../utils/errorUtil";
 import useToast from "../hooks/useToast";
 
@@ -37,6 +37,7 @@ const AddHero = () => {
                 appearance_year: (elements.namedItem('year') as HTMLInputElement).value,
                 equipment: (elements.namedItem('equipment') as HTMLInputElement).value,
                 bio: (elements.namedItem('bio') as HTMLTextAreaElement).value
+                // type: (elements.namedItem('type') as HTMLSelectElement).value              <-----    AGREGAR
             };
 
             const isDc = data.comic_universe === 'DC';
@@ -44,7 +45,7 @@ const AddHero = () => {
                 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/DC_Comics_logo.svg/1024px-DC_Comics_logo.svg.png' :
                 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Marvel_Logo.svg';
 
-            const formData: Omit<Hero, 'id' | 'images_urls'> = {
+            const formData: Omit<Hero, 'id' | 'images_urls' | 'type'> = {
                 ...data,
                 logo
             }

@@ -7,5 +7,6 @@ export interface Hero {
     logo: string
     appearance_year: string
     equipment: string
+    type: string
     images_urls: string[]
 }

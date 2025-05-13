@@ -1,7 +1,7 @@
 import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 
-import getSuperhero from "../utils/getSuperhero";
+import getSuperhero from "../utils/db/getSuperhero";
 
 const Character = () => {
     const { id } = useParams();
