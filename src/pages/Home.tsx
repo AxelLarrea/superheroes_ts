@@ -8,7 +8,7 @@ import getSuperheroes from "../utils/db/getSuperheroes";
 import Card from "../components/Card";
 import BtnFilter from "../components/BtnFilter";
 
-type CardHero = Pick<Hero, 'id' | 'char_name' | 'images_urls' | 'comic_universe'>
+export type CardHero = Pick<Hero, 'id' | 'char_name' | 'images_urls' | 'comic_universe' | 'type'>
 
 const Home = () => {
 
@@ -22,11 +22,10 @@ const Home = () => {
 
     const searchHero = heroes?.filter((hero: CardHero) => hero.char_name.toLowerCase().includes(searchCharacter))
     const cantidadChar = searchHero?.length
-    
 
     return (
         <>
-            <div className="hidden max-w-[1200px] h-24 font-medium text-base sm:flex justify-between items-center mx-8 mt-4 xl:mx-auto">
+            <section className="hidden max-w-[1200px] h-24 font-medium text-base sm:flex justify-between items-center mx-8 mt-4 xl:mx-auto">
                 <BtnFilter cantidadChar={cantidadChar} isMobile={false} />
 
                 <div className="bg-btn hover:bg-btn-hover rounded-md shadow-md cursor-pointer px-4 py-2" onClick={() => navigate('/add-one')}>
@@ -41,9 +40,9 @@ const Home = () => {
                         </svg>
                     </button>
                 </div>
-            </div>
+            </section>
 
-            <div className="max-w-[1200px] grid grid-cols-1 gap-6 py-4 mx-8 xl:mx-auto xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <section className="max-w-[1200px]  grid grid-cols-1 gap-6 py-4 mx-8 xl:mx-auto xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {
                     searchHero?.map((hero: CardHero) => (
                         <Card 
@@ -51,10 +50,11 @@ const Home = () => {
                             char_name={hero.char_name}
                             images_urls={hero.images_urls}
                             comic_universe={hero.comic_universe}
+                            type={hero.type}
                         />
                     ))
                 }
-            </div>
+            </section>
         </>
     );
 }
