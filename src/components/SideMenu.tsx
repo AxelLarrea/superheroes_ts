@@ -56,7 +56,7 @@ const SideMenu = ({ isMenuOpen, toggleMenu, isHome, filterCharacters }: Props) =
                     {/* Filter in slide menu */}
                     {isHome && (
                         <div className="mb-6">
-                            <label className="block text-white text-sm mb-2">Filtrar por universo</label>
+                            <p className="block text-white text-sm mb-2">Filtrar por universo</p>
                             <div className="bg-white/10 p-3 rounded-lg">
                                 <BtnFilter cantidadChar={undefined} isMobile={true} />
                             </div>

@@ -1,4 +1,4 @@
-import supabase from "../db/supabase-client";
+import supabase from "../../db/supabase-client";
 
 const getSuperhero = async (id: string) => {
     const { data, error } = await supabase

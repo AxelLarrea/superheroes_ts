@@ -1,14 +1,15 @@
 import { useState } from "react";
+import useToast from "../hooks/useToast";
 import { Hero } from "../types/types";
 import { Slide, ToastContainer } from "react-toastify";
 
 import supabase from "../db/supabase-client";
-import uploadImage from "../utils/uploadImage";
+import uploadImage from "../utils/db/uploadImage";
+import { checkDuplicates, checkFilesType } from "../utils/checkFilesUtils";
 import { getErrorMessage } from "../utils/errorUtil";
-import useToast from "../hooks/useToast";
 
 import HeroForm from "../components/HeroForm";
-import { checkDuplicates, checkFilesType } from "../utils/checkFilesUtils";
+import BtnGoBack from "../components/BtnGoBack";
 
 export interface ImageFile {
     file: File
@@ -36,7 +37,8 @@ const AddHero = () => {
                 comic_universe: (elements.namedItem('comic') as HTMLSelectElement).value,
                 appearance_year: (elements.namedItem('year') as HTMLInputElement).value,
                 equipment: (elements.namedItem('equipment') as HTMLInputElement).value,
-                bio: (elements.namedItem('bio') as HTMLTextAreaElement).value
+                bio: (elements.namedItem('bio') as HTMLTextAreaElement).value,
+                type:  (elements.namedItem('type') as HTMLSelectElement).value as 'Heroe' | 'Villano' | 'Antiheroe'
             };
 
             const isDc = data.comic_universe === 'DC';
@@ -178,12 +180,8 @@ const AddHero = () => {
 
     return (
         <>
-            <div className="max-w-[1200px] flex flex-col items-center min-[325px]:mx-8 xl:mx-auto pt-4">
-                <button className="self-start text-btn text-lg font-semibold cursor-pointer rounded-md p-2 pl-0">
-                    <a href="/">{'<- Volver'}</a>
-                </button>
-            </div>
-            <div className="max-w-[480px] border border-gray-300 rounded-lg p-8 min-[325px]:mx-8 my-8 xs:mx-auto">
+            <BtnGoBack/>
+            <div className="max-w-[480px] bg-white/75 border border-gray-300 rounded-lg shadow-sm p-8 min-[325px]:mx-8 my-8 xs:mx-auto">
                 <h1 className="text-[22px] 2xs:text-3xl font-bold text-slate-800 font-sans text-center">Agregar personaje</h1>
                 
                 <HeroForm

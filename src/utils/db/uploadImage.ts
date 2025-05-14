@@ -1,4 +1,4 @@
-import supabase  from '../db/supabase-client';
+import supabase  from '../../db/supabase-client';
 
 const uploadImage = async ({ charId, files }: {charId: string, files: File[]}) => {
     try {
