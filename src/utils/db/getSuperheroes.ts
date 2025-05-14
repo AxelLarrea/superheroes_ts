@@ -4,7 +4,7 @@ const getSuperheroes = async (filter: string) => {
     try {
         const { data, error } = await supabase
             .from('superheroe')
-            .select('id, char_name, comic_universe, superheroe_images(image_url)') // Join con la tabla superheroe_images
+            .select('id, char_name, comic_universe, type, superheroe_images(image_url)') // Join con la tabla superheroe_images
         
         if (error) throw new Error('Error fetching superheroes')
         

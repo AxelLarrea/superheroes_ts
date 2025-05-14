@@ -7,6 +7,6 @@ export interface Hero {
     logo: string
     appearance_year: string
     equipment: string
-    type: string
+    type: 'Heroe' | 'Villano' | 'Antiheroe'
     images_urls: string[]
 }
