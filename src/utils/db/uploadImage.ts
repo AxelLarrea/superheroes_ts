@@ -2,7 +2,6 @@ import supabase  from '../../db/supabase-client';
 
 const uploadImage = async ({ charId, files }: {charId: string, files: File[]}) => {
     try {
-        
         files.forEach(async (file) => {
             const fileName = `${charId}-${file.name}`
 
