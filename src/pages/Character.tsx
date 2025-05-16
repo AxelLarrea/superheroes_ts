@@ -16,6 +16,12 @@ const Character = () => {
         'bg-primary-dc/20 text-primary-dc' :
         'bg-primary-marvel/20 text-primary-marvel';
 
+    const imageUrl = `${data?.images_urls[0]}?width=250&height=250`;
+
+    // Formato de url para renderizar imagen https://x.supabase.co/storage/v1/render/image/public/storage/imagen?width=250&height=250
+    // Url con imagen renderizada
+    const modifiedImageUrl = imageUrl ? imageUrl.replace('object', 'render/image') : ''
+
     return (
         <>
             <BtnGoBack/>
@@ -24,7 +30,7 @@ const Character = () => {
                     {/* Header */}
                     <div className="w-full flex flex-col items-center justify-center gap-8 border-b border-b-gray-300 pb-8 lg:flex-row ">
                         <div className="w-60 h-60 rounded-full">
-                            <img src={ data?.images_urls[0] } alt="Character Logo" className="object-cover h-full w-full rounded-full" />
+                            <img src={modifiedImageUrl} alt="Character Logo" className="object-cover h-full w-full rounded-full" />
                         </div>
                         
                         <div>
