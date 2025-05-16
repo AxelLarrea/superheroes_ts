@@ -650,7 +650,7 @@ upload()
 
 //     const urls = images.map((image) => {
 //         const { data: publicUrlData } = supabase
-//         .storage
+//             .storage
 //             .from('images')
 //             .getPublicUrl(image);
 
