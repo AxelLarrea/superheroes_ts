@@ -181,7 +181,7 @@ const AddHero = () => {
     return (
         <>
             <BtnGoBack/>
-            <div className="max-w-[480px] bg-white/75 border border-gray-300 rounded-lg shadow-sm p-8 min-[325px]:mx-8 my-8 xs:mx-auto">
+            <div className="max-w-[500px] bg-white/75 border border-gray-300 rounded-lg shadow-sm p-8 my-8 min-[325px]:mx-8 xs:mx-auto xs:py-12 xs:px-16">
                 <h1 className="text-[22px] 2xs:text-3xl font-bold text-slate-800 font-sans text-center">Agregar personaje</h1>
                 
                 <HeroForm

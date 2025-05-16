@@ -41,8 +41,8 @@ const Home = () => {
                     </button>
                 </div>
             </section>
-
-            <section className="max-w-[1200px]  grid grid-cols-1 gap-6 py-4 mx-8 xl:mx-auto xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            
+            <section className="max-w-[1200px] grid grid-cols-1 gap-6 py-4 mx-8 xl:mx-auto xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {
                     searchHero?.map((hero: CardHero) => (
                         <Card 

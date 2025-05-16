@@ -14,14 +14,14 @@ const BtnFilter = ({ cantidadChar, isMobile }: Cantidad ) => {
 
     // Clases para el menú desplegable
     const desktopClass = isClicked ? 
-        'max-w-[400px] opacity-100 rounded-s-none rounded-e-md pl-[100%] visible' :
+        'max-w-[400px] opacity-100 rounded-e-md pl-[100%] visible' :
         'opacity-0 w-auto invisible'
 
     const mobileClass = isClicked ? 
         'w-full opacity-100 flex-col top-0 pt-[20%] visible' :
         'w-full opacity-0 flex-col top-0 h-auto invisible'
 
-    const btnClassDesktop = isClicked ? 'rounded-s-md rounded-e-none' : '' // Para botón desktop
+    const btnClassDesktop = isClicked ? 'rounded-s-md rounded-e-none shadow-none' : 'shadow-xs' // Para botón desktop
     const btnClassMobile = isClicked ? 'rounded-t-md rounded-b-none' : '' // Para botón mobile
     const btnClass = isMobile ? btnClassMobile : btnClassDesktop
 
@@ -83,7 +83,7 @@ const BtnFilter = ({ cantidadChar, isMobile }: Cantidad ) => {
                     </button>
                 </div>  
                 ) : (
-                <div className={`${desktopClass} absolute left-0 z-0 overflow-hidden flex text-[#4A55A7] bg-btn-filter border border-[#DFE1F5] border-l-0 rounded-md transition-all duration-300`}>
+                <div className={`${desktopClass} absolute left-0 z-0 overflow-hidden flex text-[#4A55A7] bg-btn-filter border border-[#DFE1F5] border-l-0 rounded-md shadow-xs transition-all duration-300`}>
                     <button className="hover:bg-[#DFE1F5] cursor-pointer px-4 py-2" value="Todos" onClick={() => handleClick('Todos')}>
                         <span className="text-center">Todos</span>
                     </button>

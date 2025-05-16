@@ -76,7 +76,7 @@ const HeroForm = ({ handleSubmit, handleImageChange, handleDrop, handleDeleteIma
                     id="Images"
                     multiple
                     required
-                    className="w-full h-full text-gray-600 text-sm border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:rounded-full file:border-0 file:bg-primary-header/80 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-primary-header"
+                    className="w-full text-gray-600 text-sm border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:rounded-full file:border-0 file:bg-primary-header/80 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-primary-header"
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={handleDrop}
                     onChange={handleImageChange}
