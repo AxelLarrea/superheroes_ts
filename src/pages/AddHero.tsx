@@ -4,7 +4,6 @@ import { Hero } from "../types/types";
 import { Slide, ToastContainer } from "react-toastify";
 
 import supabase from "../db/supabase-client";
-import uploadImage from "../utils/db/uploadImage";
 import { checkDuplicates, checkFilesType } from "../utils/checkFilesUtils";
 import { getErrorMessage } from "../utils/errorUtil";
 
@@ -26,7 +25,7 @@ const AddHero = () => {
         try {
             event.preventDefault()
             notify()
-            // throw new Error("Error inesperado"); // <--- para probar el error
+            // throw new Error("Error inesperado"); // <--- para probar el Toast error
             
             const { elements } = event.currentTarget;
 
@@ -79,12 +78,14 @@ const AddHero = () => {
             if (queryError) throw new Error("Error al obtener el id del personaje")
             
             // Upload imágenes
-            const imagesFiles = images.map(({ file }: ImageFile) => file)
-
             try {
-                await uploadImage({
-                    charId: heroQuery?.id, 
-                    files: imagesFiles
+                const formImageData = new FormData()
+                images.forEach(image => formImageData.append('files', image.file))
+                formImageData.append('charId', heroQuery?.id)
+
+                await fetch('http://localhost:3000/api/uploadImage', {
+                    method: 'POST',
+                    body: formImageData
                 })
 
                 handleReset()
