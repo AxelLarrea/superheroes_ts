@@ -27,7 +27,7 @@ function App() {
                 <Header />
                 
                 <Route path="/" component={Home} />
-                <Route path="/char/:id" component={Character} />
+                <Route path="/char/:name" component={Character} />
                 <Route path="/add-one" component={AddHero} />
 
                 <Footer />

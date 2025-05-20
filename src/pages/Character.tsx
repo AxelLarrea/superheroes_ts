@@ -1,15 +1,21 @@
 import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 
-import getSuperhero from "../utils/db/getSuperhero";
+// import getSuperhero from "../utils/db/getSuperhero";
 import BtnGoBack from "../components/BtnGoBack";
 
 const Character = () => {
-    const { id } = useParams();
+    const { name } = useParams();
+
+    const fetchHero = async () => {
+        const response = await fetch(`http://localhost:3000/api/getSuperhero?name=${name}`)
+        const res = await response.json()
+        return res.data
+    }
 
     const { data } = useQuery({
-        queryKey: ['superhero', id],
-        queryFn: () => getSuperhero(id as string)
+        queryKey: ['superhero', name],
+        queryFn: fetchHero
     })
     
     const comic_color_primary = data?.comic_universe === 'DC' ? 
