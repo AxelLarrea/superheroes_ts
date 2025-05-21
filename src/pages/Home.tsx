@@ -15,10 +15,10 @@ const Home = () => {
     const [,navigate] = useLocation();
 
     const PRODUCTION_URL = `/api/getSuperheroes?filter=${selectedFilter}`
-    const LOCAL_URL = `http://localhost:3000/api/getSuperheroes?filter=${selectedFilter}`
+    // const LOCAL_URL = `http://localhost:3000/api/getSuperheroes?filter=${selectedFilter}`
 
     const fetchHeroes = async () => {
-        const response = await fetch(LOCAL_URL)
+        const response = await fetch(PRODUCTION_URL)
         const res = await response.json()
         return res.data
     }

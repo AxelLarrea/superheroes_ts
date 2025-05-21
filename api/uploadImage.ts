@@ -1,4 +1,5 @@
 import supabase from "./supabaseClient.ts";
+import formatImageName from "../src/utils/formatImageName.ts";
 
 export async function POST(request: Request) {
 
@@ -20,32 +21,24 @@ export async function POST(request: Request) {
 
     try {
         await Promise.all(files.map(async (file: File) => {
-            const fileName = `${charId}-${file.name}`
+            const formatedName = formatImageName(file.name)
+            const fileName = `${charId}-${formatedName}`
 
             // Sube la imágen al storage bucket
             const { error } = await supabase.storage
                 .from('images')
                 .upload(fileName, file);
-
-            console.log('a');
-            console.log('Error: ', error);
     
-            if (error) throw new Error(`Error al subir ${file.name}`);
+            if (error) throw new Error(`Error al subir ${formatedName}`);
             
             // Obtén la URL pública de la imágen
             const { data: publicUrlData } = supabase.storage
                 .from('images')
                 .getPublicUrl(fileName);
 
-            console.log(publicUrlData);
-            console.log('b');
-
-            if (!publicUrlData) throw new Error(`Error al obtener la URL pública de ${file.name}`);
+            if (!publicUrlData) throw new Error(`Error al obtener la URL pública de ${formatedName}`);
 
             const URL = publicUrlData.publicUrl;
-
-            console.log(URL);
-            console.log('c');
             
             // Inserta la URL en la tabla superheroe_images
             const { error: insertError } = await supabase
@@ -80,4 +73,15 @@ export async function POST(request: Request) {
 			},
 		});
     }
+}
+
+export async function OPTIONS() {
+    return new Response(null, {
+        status: 204,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+    });
 }

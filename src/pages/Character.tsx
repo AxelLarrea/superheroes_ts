@@ -7,10 +7,10 @@ const Character = () => {
     const { name } = useParams();
 
     const PRODUCTION_URL = `/api/getSuperhero?name=${name}`
-    const LOCAL_URL = `http://localhost:3000/api/getSuperhero?name=${name}`
+    // const LOCAL_URL = `http://localhost:3000/api/getSuperhero?name=${name}`
 
     const fetchHero = async () => {
-        const response = await fetch(LOCAL_URL)
+        const response = await fetch(PRODUCTION_URL)
         const res = await response.json()
         return res.data
     }
