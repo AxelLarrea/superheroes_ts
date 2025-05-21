@@ -1,4 +1,4 @@
-import supabase from "./supabaseClient.ts";
+import supabase from "./supabaseClient";
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);

@@ -1,5 +1,5 @@
-import supabase from "./supabaseClient.ts";
-import formatImageName from "../src/utils/formatImageName.ts";
+import supabase from "./supabaseClient";
+import formatImageName from "../src/utils/formatImageName";
 
 export async function POST(request: Request) {
 
