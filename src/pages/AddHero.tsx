@@ -15,8 +15,8 @@ export interface ImageFile {
 }
 
 // const LOCAL_INSERT_URL = 'http://localhost:3000/api/insertHero'
-const PRODUCTION_INSERT_URL = '/api/insertHero'
 // const LOCAL_UPLOAD_URL = 'http://localhost:3000/api/uploadImage'
+const PRODUCTION_INSERT_URL = '/api/insertHero'
 const PRODUCTION_UPLOAD_URL = '/api/uploadImage'
 
 const AddHero = () => {
@@ -64,6 +64,8 @@ const AddHero = () => {
                     body: JSON.stringify(formData)
                 })
 
+                if (!response.ok) throw new Error('Error al agregar el personaje')
+                
                 const res = await response.json()
                 const heroQuery = res.data
 
@@ -72,17 +74,18 @@ const AddHero = () => {
                 images.forEach(image => formImageData.append('files', image.file))
                 formImageData.append('charId', heroQuery?.id)
 
-                await fetch(PRODUCTION_UPLOAD_URL, {
+                const uploadResponse = await fetch(PRODUCTION_UPLOAD_URL, {
                     method: 'POST',
                     body: formImageData
                 })
 
+                if (!uploadResponse.ok) throw new Error('Error al subir las imágenes')
+
                 handleReset()
                 updateSuccess()
             } catch (uploadError) {
-                return console.log(uploadError)
+                return uploadError
             }
-
         } catch (error) {
             const errorMessage = getErrorMessage(error);
             updateError(errorMessage)

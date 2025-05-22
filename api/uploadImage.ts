@@ -1,42 +1,40 @@
-import supabase from "./supabaseClient";
-import formatImageName from "../src/utils/formatImageName";
+import { VercelRequest, VercelResponse } from '@vercel/node';
+import { IncomingForm } from 'formidable';
+import fs from 'fs';
+import supabase from "./supabaseClient.js";
+import formatImageName from "../src/utils/formatImageName.js";
 
-export async function POST(request: Request) {
-
-    const formData = await request.formData()
-    const files = formData.getAll('files') as File[]
-    const charId = formData.get('charId') as string
-
-    if (!files || !charId) {
-        return new Response(JSON.stringify({ error: 'Missing files or charId' }), {
-            status: 400,
-            headers: {
-                "Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-				"Access-Control-Allow-Headers": "Content-Type",
-            }
-        })
-    }
-
+export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
-        await Promise.all(files.map(async (file: File) => {
-            const formatedName = formatImageName(file.name)
+        const form = new IncomingForm();
+        const [fields, files] = await form.parse(req);
+        const charId = fields.charId?.[0] || fields.charId;
+        const formFiles = files.files || [];
+    
+        if (!files || !charId) {
+            res.setHeader('Content-Type', 'application/json');
+            return res.status(400).json({ error: 'Missing files or charId' });
+        }
+
+        await Promise.all(formFiles.map(async (file) => {
+            const formatedName = formatImageName(file.originalFilename!)
             const fileName = `${charId}-${formatedName}`
+
+            const fileData = fs.readFileSync(file.filepath);
 
             // Sube la imágen al storage bucket
             const { error } = await supabase.storage
                 .from('images')
-                .upload(fileName, file);
+                .upload(fileName, fileData);
     
-            if (error) throw new Error(`Error al subir ${formatedName}`);
-            
+            if (error) throw new Error('Error al subir imágen al storage');
+
             // Obtén la URL pública de la imágen
             const { data: publicUrlData } = supabase.storage
                 .from('images')
                 .getPublicUrl(fileName);
 
-            if (!publicUrlData) throw new Error(`Error al obtener la URL pública de ${formatedName}`);
+            if (!publicUrlData) throw new Error(`Error al obtener la URL pública de la imágen`);
 
             const URL = publicUrlData.publicUrl;
             
@@ -45,33 +43,21 @@ export async function POST(request: Request) {
                 .from('superheroe_images')
                 .insert({ 
                     image_url: URL,
-                    superheroe_id: parseInt(charId)
+                    superheroe_id: charId
                 })
-        
+
             if (insertError) throw new Error('Error al insertar las url de imágenes con el id del personaje');
         }))
-
-        return new Response(JSON.stringify({ message: 'Images uploaded successfully' }), {
-            status: 200,
-            headers: {
-                "Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-				"Access-Control-Allow-Headers": "Content-Type",
-            }
-        })
+        
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(200).json({ message: 'Images uploaded successfully' });
 
     } catch (error) {
-        console.error('Error al subir las imágenes:', error);
-        return new Response(JSON.stringify({ error: 'Error al subir las imágenes', message: (error as Error).message }), {
-			status: 500,
-			headers: { 
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-				"Access-Control-Allow-Headers": "Content-Type",
-			},
-		});
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(500).json({ 
+            error: 'Error al subir las imágenes', 
+            message: (error as Error).message 
+        });
     }
 }
 

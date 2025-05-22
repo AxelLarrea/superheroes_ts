@@ -24,7 +24,7 @@ const Character = () => {
         'bg-primary-dc/20 text-primary-dc' :
         'bg-primary-marvel/20 text-primary-marvel';
 
-    const imageUrl = `${character?.images_urls[0]}?width=250&height=250`;
+    const imageUrl = `${character?.images_urls}?width=250&height=250`;
 
     // Formato de url para renderizar imagen https://x.supabase.co/storage/v1/render/image/public/storage/imagen?width=250&height=250
     // Url con imagen renderizada

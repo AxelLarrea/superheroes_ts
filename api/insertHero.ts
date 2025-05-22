@@ -1,23 +1,16 @@
-import supabase from "./supabaseClient";
+import { VercelRequest, VercelResponse } from '@vercel/node';
+import supabase from "./supabaseClient.js";
 
-export async function POST(request: Request) {
-
-    const formData = await request.json()
-    const char_name = formData.char_name
-
-    if (!char_name) {
-        return new Response(JSON.stringify({ error: 'Missing char name' }), {
-            status: 400,
-            headers: {
-                "Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-				"Access-Control-Allow-Headers": "Content-Type",
-            }
-        })
-    }
-
+export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
+        const formData = req.body
+        const char_name = formData.char_name
+    
+        if (!char_name) {
+            res.setHeader('Content-Type', 'application/json');
+            return res.status(400).json({ error: 'Missing char name' });
+        }
+
         // Validate existing hero
         const { data: existingHero, error: existingHeroError } = await supabase
             .from('superheroe')
@@ -44,27 +37,15 @@ export async function POST(request: Request) {
 
         if (queryError) throw new Error("Error al obtener el id del personaje")
 
-        return new Response(JSON.stringify({ data: heroQuery }), {
-            status: 200,
-            headers: {
-                "Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-				"Access-Control-Allow-Headers": "Content-Type",
-            }
-        })
-
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(200).json({ data: heroQuery });
+        
     } catch (error) {
-        console.error('Error al agregar el personaje:', error);
-        return new Response(JSON.stringify({ error: 'Error al agregar el personaje', message: (error as Error).message }), {
-			status: 500,
-			headers: { 
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-				"Access-Control-Allow-Headers": "Content-Type",
-			},
-		});
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(500).json({ 
+            error: 'Error al agregar el personaje', 
+            message: (error as Error).message 
+        });
     }
 }
 
