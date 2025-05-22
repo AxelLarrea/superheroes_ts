@@ -16,7 +16,7 @@ const Card = ({ char_name, images_urls, comic_universe, type } : Omit<CardHero, 
         'bg-red-100 text-red-700 border-red-200' :
         'bg-purple-100 text-purple-700 border-purple-200'
 
-    const imageUrl = `${images_urls[0]}?width=200&height=220`;
+    const imageUrl = `${images_urls}?width=200&height=220`;
 
     // Formato de url para renderizar imagen https://x.supabase.co/storage/v1/render/image/public/storage/imagen?width=250&height=250
     // Url con imagen renderizada

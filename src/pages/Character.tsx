@@ -1,22 +1,30 @@
 import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 
-import getSuperhero from "../utils/db/getSuperhero";
 import BtnGoBack from "../components/BtnGoBack";
 
 const Character = () => {
-    const { id } = useParams();
+    const { name } = useParams();
 
-    const { data } = useQuery({
-        queryKey: ['superhero', id],
-        queryFn: () => getSuperhero(id as string)
+    const PRODUCTION_URL = `/api/getSuperhero?name=${name}`
+    // const LOCAL_URL = `http://localhost:3000/api/getSuperhero?name=${name}`
+
+    const fetchHero = async () => {
+        const response = await fetch(PRODUCTION_URL)
+        const res = await response.json()
+        return res.data
+    }
+
+    const { data: character } = useQuery({
+        queryKey: ['superhero', name],
+        queryFn: fetchHero
     })
     
-    const comic_color_primary = data?.comic_universe === 'DC' ? 
+    const comic_color_primary = character?.comic_universe === 'DC' ? 
         'bg-primary-dc/20 text-primary-dc' :
         'bg-primary-marvel/20 text-primary-marvel';
 
-    const imageUrl = `${data?.images_urls[0]}?width=250&height=250`;
+    const imageUrl = `${character?.images_urls}?width=250&height=250`;
 
     // Formato de url para renderizar imagen https://x.supabase.co/storage/v1/render/image/public/storage/imagen?width=250&height=250
     // Url con imagen renderizada
@@ -35,12 +43,12 @@ const Character = () => {
                         
                         <div>
                             <div>
-                                <h1 className="text-center text-3xl text-slate-800 font-semibold  xs:text-4xl sm:text-5xl lg:text-left">{ data?.char_name }</h1>
+                                <h1 className="text-center text-3xl text-slate-800 font-semibold  xs:text-4xl sm:text-5xl lg:text-left">{ character?.char_name }</h1>
                             </div>
                                                 
                             <div className="flex gap-2 text-lg font-medium text-slate-800 mt-4">
-                                <span className={`${comic_color_primary} rounded-full  px-3 py-1`}>{ data?.comic_universe }</span>
-                                <span className={`rounded-full border-1 border-gray-300 text-center px-3 py-1`}>Desde { data?.appearance_year }</span>
+                                <span className={`${comic_color_primary} rounded-full  px-3 py-1`}>{ character?.comic_universe }</span>
+                                <span className={`rounded-full border-1 border-gray-300 text-center px-3 py-1`}>Desde { character?.appearance_year }</span>
                             </div>
                         </div>
                     </div>
@@ -59,12 +67,12 @@ const Character = () => {
                         <div className="flex flex-col gap-8 md:flex-row">
                             <div className="w-full border border-gray-100 bg-gray-50 rounded-2xl p-4">
                                 <h3 className="text-lg 2xs:text-xl text-slate-700 font-medium">Nombre real</h3>
-                                <p className="text-lg text-slate-600 mt-2">{data?.real_name}</p>
+                                <p className="text-lg text-slate-600 mt-2">{character?.real_name}</p>
                             </div>
                             
                             <div className="w-full border border-gray-100 bg-gray-50 rounded-2xl p-4">
                                 <h3 className="text-lg 2xs:text-xl text-slate-700 font-medium">Primera aparición</h3>
-                                <p className="text-lg text-slate-600 mt-2">{data?.appearance_year} - Comic primera aparición</p>
+                                <p className="text-lg text-slate-600 mt-2">{character?.appearance_year} - Comic primera aparición</p>
                             </div>
                         </div>
                     </div>
@@ -78,7 +86,7 @@ const Character = () => {
                                 Equipamiento
                             </h2>
                             <div className="w-full border border-gray-100 bg-gray-50 rounded-2xl p-4 ">
-                                <p className="text-lg text-slate-600">{data?.equipment}</p>
+                                <p className="text-lg text-slate-600">{character?.equipment}</p>
                             </div>
                         </div>
 
@@ -97,7 +105,7 @@ const Character = () => {
                                 Tipo
                             </h2>
                             <div className="w-full border border-gray-100 bg-gray-50 rounded-2xl p-4 ">
-                                <p className="text-lg text-slate-600">{data?.type}</p>
+                                <p className="text-lg text-slate-600">{character?.type}</p>
                             </div>
                         </div>
                     </div>
@@ -111,7 +119,7 @@ const Character = () => {
                             Biografía
                         </h2>
                         <div className="w-full border border-gray-100 bg-gray-50 rounded-2xl p-4">
-                            <p className="text-lg text-slate-700">{data?.bio}</p>
+                            <p className="text-lg text-slate-700">{character?.bio}</p>
                         </div>
                     </div>
                 </div>

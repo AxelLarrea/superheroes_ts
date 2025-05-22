@@ -3,7 +3,6 @@ import { useLocation } from "wouter";
 
 import { Hero } from "../types/types";
 import { useCharStore } from "../utils/store";
-import getSuperheroes from "../utils/db/getSuperheroes";
 
 import Card from "../components/Card";
 import BtnFilter from "../components/BtnFilter";
@@ -15,9 +14,18 @@ const Home = () => {
     const { searchCharacter, selectedFilter } = useCharStore()
     const [,navigate] = useLocation();
 
+    const PRODUCTION_URL = `/api/getSuperheroes?filter=${selectedFilter}`
+    // const LOCAL_URL = `http://localhost:3000/api/getSuperheroes?filter=${selectedFilter}`
+
+    const fetchHeroes = async () => {
+        const response = await fetch(PRODUCTION_URL)
+        const res = await response.json()
+        return res.data
+    }
+
     const { data: heroes } = useQuery({
         queryKey: ['superheroes', selectedFilter],
-        queryFn: () => getSuperheroes(selectedFilter)
+        queryFn: fetchHeroes
     })
 
     const searchHero = heroes?.filter((hero: CardHero) => hero.char_name.toLowerCase().includes(searchCharacter))

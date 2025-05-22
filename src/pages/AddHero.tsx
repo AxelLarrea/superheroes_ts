@@ -3,8 +3,6 @@ import useToast from "../hooks/useToast";
 import { Hero } from "../types/types";
 import { Slide, ToastContainer } from "react-toastify";
 
-import supabase from "../db/supabase-client";
-import uploadImage from "../utils/db/uploadImage";
 import { checkDuplicates, checkFilesType } from "../utils/checkFilesUtils";
 import { getErrorMessage } from "../utils/errorUtil";
 
@@ -16,6 +14,11 @@ export interface ImageFile {
     previewURL: string
 }
 
+// const LOCAL_INSERT_URL = 'http://localhost:3000/api/insertHero'
+// const LOCAL_UPLOAD_URL = 'http://localhost:3000/api/uploadImage'
+const PRODUCTION_INSERT_URL = '/api/insertHero'
+const PRODUCTION_UPLOAD_URL = '/api/uploadImage'
+
 const AddHero = () => {
     const [images, setImages] = useState<ImageFile[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +29,7 @@ const AddHero = () => {
         try {
             event.preventDefault()
             notify()
-            // throw new Error("Error inesperado"); // <--- para probar el error
+            // throw new Error("Error inesperado"); // <--- para probar el Toast error
             
             const { elements } = event.currentTarget;
 
@@ -51,48 +54,38 @@ const AddHero = () => {
                 logo
             }
 
-            // Validate existing hero
-            const { data: existingHero, error: existingHeroError } = await supabase
-                .from('superheroe')
-                .select('*')
-                .eq('char_name', data.char_name)
-                
-            if (existingHero && existingHero?.length > 0 ) throw new Error("El personaje ya existe")
-            
-            if (existingHeroError) throw new Error("Error al validar si el personaje existe")
-
-            // Insert superheroe
-            const { error: insertError } = await supabase
-                .from('superheroe')
-                .insert(formData)
-
-            if (insertError) throw new Error("Error al insertar el personaje")
-            
-            
-            // Query superheroe id
-            const { data: heroQuery, error: queryError } = await supabase
-                .from('superheroe')
-                .select('id')
-                .eq('char_name', data.char_name)
-                .single()
-
-            if (queryError) throw new Error("Error al obtener el id del personaje")
-            
-            // Upload imágenes
-            const imagesFiles = images.map(({ file }: ImageFile) => file)
-
             try {
-                await uploadImage({
-                    charId: heroQuery?.id, 
-                    files: imagesFiles
+                // Agregar personaje
+                const response = await fetch(PRODUCTION_INSERT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
                 })
+
+                if (!response.ok) throw new Error('Error al agregar el personaje')
+                
+                const res = await response.json()
+                const heroQuery = res.data
+
+                // Upload imágenes
+                const formImageData = new FormData()
+                images.forEach(image => formImageData.append('files', image.file))
+                formImageData.append('charId', heroQuery?.id)
+
+                const uploadResponse = await fetch(PRODUCTION_UPLOAD_URL, {
+                    method: 'POST',
+                    body: formImageData
+                })
+
+                if (!uploadResponse.ok) throw new Error('Error al subir las imágenes')
 
                 handleReset()
                 updateSuccess()
             } catch (uploadError) {
-                return console.log(uploadError)
+                return uploadError
             }
-
         } catch (error) {
             const errorMessage = getErrorMessage(error);
             updateError(errorMessage)
