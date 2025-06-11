@@ -1,4 +1,4 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import supabase from "./supabaseClient.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -17,7 +17,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     
         const { superheroe_images, ...hero } = data
     
-        // const images_urls = superheroe_images.map((image: { image_url: string }) => image.image_url)
+        // const images_urls = superheroe_images.map((image: { image_url: string }) => image.image_url) <-- si se quieren todas las imágenes
         const images_urls = superheroe_images[0].image_url
         
         const heroWithImages = {
