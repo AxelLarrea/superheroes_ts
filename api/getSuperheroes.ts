@@ -1,4 +1,4 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import supabase from "./supabaseClient.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -10,7 +10,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const { data, error } = await supabase
             .from('superheroe')
             .select('id, char_name, comic_universe, type, superheroe_images(image_url)') // Join con la tabla superheroe_images
-        
+
         if (error) throw new Error('Error fetching superheroes')
         
         const superheroesWithImages = data.map(({ superheroe_images, ...hero }) => (

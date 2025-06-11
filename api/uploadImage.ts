@@ -1,8 +1,8 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { IncomingForm } from 'formidable';
-import fs from 'fs';
 import supabase from "./supabaseClient.js";
 import formatImageName from "../src/utils/formatImageName.js";
+import sharp from 'sharp';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
@@ -20,12 +20,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             const formatedName = formatImageName(file.originalFilename!)
             const fileName = `${charId}-${formatedName}`
 
-            const fileData = fs.readFileSync(file.filepath);
+            const resizedImage = await sharp(file.filepath).resize(250, 250).webp().toBuffer();
 
             // Sube la imágen al storage bucket
             const { error } = await supabase.storage
                 .from('images')
-                .upload(fileName, fileData);
+                .upload(fileName, resizedImage);
     
             if (error) throw new Error('Error al subir imágen al storage');
 

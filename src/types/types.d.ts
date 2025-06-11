@@ -8,5 +8,5 @@ export interface Hero {
     appearance_year: string
     equipment: string
     type: 'Heroe' | 'Villano' | 'Antiheroe'
-    images_urls: string[]
+    images_urls: string
 }
