@@ -36,7 +36,7 @@ const Header = () => {
                             </g>
                         </svg>
                         
-                        <a href="/" className="text-4xl font-bold">Superheroes</a>
+                        <a href="/" className="text-3xl font-bold">CharactersHub</a>
                     </div>
                     
                     {/* Desktop search bar */}

@@ -1,4 +1,4 @@
-Superheroes SPA
+CharactersHub SPA
 
 Es una aplicación donde se puede:
 - Ver información de un personaje.
