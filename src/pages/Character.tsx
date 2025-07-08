@@ -32,7 +32,7 @@ const Character = () => {
                     {/* Header */}
                     <div className="w-full flex flex-col items-center justify-center gap-8 border-b border-b-gray-300 pb-8 lg:flex-row ">
                         <div className="w-60 h-60 rounded-full">
-                            <img src={character?.images_urls} alt="Character Logo" className="object-cover h-full w-full rounded-full" />
+                            <img src={character?.images_urls} alt="Character Logo" width={240} height={240} className="object-cover h-full w-full rounded-full" />
                         </div>
                         
                         <div>
