@@ -22,7 +22,7 @@ const Card = ({ char_name, images_urls, comic_universe, type } : Omit<CardHero, 
                 <span className={`${comic_class} min-w-20 text-center border rounded-xl px-2`}>{comic_universe}</span>
                 <span className={`${type_class} min-w-20 text-center border rounded-xl px-2`}>{type}</span>
             </div>
-            <img src={images_urls} alt={char_name} width={190} height={220} className="w-full h-48 object-contain rounded-lg transition-all duration-300 group-hover:scale-105" />
+            <img src={images_urls} alt={char_name} width={220} height={190} fetchPriority="high" className="w-full h-48 object-contain rounded-lg transition-all duration-300 group-hover:scale-105" />
             <div className="p-4 pb-0 text-center">
                 <h2 className="text-xl font-bold text-slate-800">{char_name}</h2>
             </div>

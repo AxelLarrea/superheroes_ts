@@ -14,7 +14,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Validate existing hero
         const { data: existingHero, error: existingHeroError } = await supabase
             .from('superheroe')
-            .select('*')
+            .select('char_name')
             .eq('char_name', char_name)
             
         if (existingHero && existingHero?.length > 0 ) throw new Error("El personaje ya existe")

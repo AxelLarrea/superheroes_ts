@@ -63,10 +63,10 @@ const AddHero = () => {
                     },
                     body: JSON.stringify(formData)
                 })
-
-                if (!response.ok) throw new Error('Error al agregar el personaje')
-                
                 const res = await response.json()
+                
+                if (!response.ok) throw new Error(res.message)
+
                 const heroQuery = res.data
 
                 // Upload imágenes
@@ -84,7 +84,8 @@ const AddHero = () => {
                 handleReset()
                 updateSuccess()
             } catch (uploadError) {
-                return uploadError
+                const errorMessage = getErrorMessage(uploadError);
+                updateError(errorMessage)
             }
         } catch (error) {
             const errorMessage = getErrorMessage(error);
