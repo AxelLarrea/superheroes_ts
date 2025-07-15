@@ -6,6 +6,7 @@ import { useCharStore } from "../utils/store";
 
 import Card from "../components/Card";
 import BtnFilter from "../components/BtnFilter";
+import CardSkeleton from "../components/CardSkeleton";
 
 export type CardHero = Pick<Hero, 'id' | 'char_name' | 'images_urls' | 'comic_universe' | 'type'>
 
@@ -23,7 +24,7 @@ const Home = () => {
         return res.data
     }
 
-    const { data: heroes } = useQuery({
+    const { data: heroes, isPending } = useQuery({
         queryKey: ['superheroes', selectedFilter],
         queryFn: fetchHeroes
     })
@@ -51,16 +52,19 @@ const Home = () => {
             </section>
             
             <section className="max-w-[1200px] grid grid-cols-1 gap-6 py-4 mx-8 xl:mx-auto xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {
-                    searchHero?.map((hero: CardHero) => (
-                        <Card 
-                            key={hero.id}
-                            char_name={hero.char_name}
-                            images_urls={hero.images_urls}
-                            comic_universe={hero.comic_universe}
-                            type={hero.type}
-                        />
-                    ))
+                {   isPending ? (
+                        Array.from({ length: 12 }).map((_, index) => <CardSkeleton key={index} />)
+                    ) : (
+                        searchHero?.map((hero: CardHero) => (
+                            <Card 
+                                key={hero.id}
+                                char_name={hero.char_name}
+                                images_urls={hero.images_urls}
+                                comic_universe={hero.comic_universe}
+                                type={hero.type}
+                            />
+                        ))
+                    )
                 }
             </section>
         </>

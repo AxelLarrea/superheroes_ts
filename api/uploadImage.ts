@@ -19,14 +19,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         await Promise.all(formFiles.map(async (file) => {
             const formatedName = formatImageName(file.originalFilename!)
             const fileName = `${charId}-${formatedName}`
-
             const resizedImage = await sharp(file.filepath).resize(250, 250).webp().toBuffer();
 
             // Sube la imágen al storage bucket
             const { error } = await supabase.storage
                 .from('images')
                 .upload(fileName, resizedImage);
-    
+            
             if (error) throw new Error('Error al subir imágen al storage');
 
             // Obtén la URL pública de la imágen
